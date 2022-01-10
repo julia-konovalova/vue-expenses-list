@@ -1,8 +1,8 @@
 <template>
   <div class="payments-display-wrapper">
     <div class="item" v-for="(item, idx) in items" :key="idx">
-      {{ idx + 1 }}{{ item }}
-      <!-- Object.values(item) выводит только значения объекта item, но в виде массива -->
+      {{ idx + 1 }}{{ Object.values(item) }}
+      <!-- Object.values(item) выводит только значения объекта item без свойств объекта, но в виде массива -->
     </div>
   </div>
 </template>

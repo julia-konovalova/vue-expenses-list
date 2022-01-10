@@ -1,6 +1,10 @@
 <template>
   <div class="payment-content">
-    <input placeholder="Category" v-model="category" type="text" />
+    <select name="Category" v-model="category" id="">
+      <option v-for="option in options" :key="option">
+        {{ option }}
+      </option>
+    </select>
     <input placeholder="Date" v-model="date" type="date" />
     <input placeholder="Value" v-model.number="value" type="number" />
     <button @click="onClickSave">Save</button>
@@ -26,22 +30,31 @@ export default {
       const y = today.getFullYear();
       return `${d}.${m}.${y}`;
     },
+    options() {
+      return this.$store.getters.getCategoryList;
+    },
   },
   methods: {
     onClickSave() {
       const data = {
         date: this.date || this.getCurrentDate,
-        value: this.value,
-
         category: this.category,
+        value: this.value,
       };
 
       this.$emit("addNewPayment", data);
     },
-    onClickClear() {},
+
+    onClickClear() {
+      (this.date = ""), (this.value = 0), (this.category = "");
+    },
+  },
+  mounted() {
+    if (!this.category?.length) {
+      this.$store.dispatch("fetchCategory");
+    }
   },
 };
 </script>
-
-<style>
+<style scoped>
 </style>
