@@ -1,7 +1,7 @@
 <template>
   <div class="payments-display-wrapper">
     <div class="item" v-for="(item, idx) in items" :key="idx">
-      {{ Object.values(item) }}
+      {{ item }}
       <!-- Object.values(item) выводит только значения объекта item без свойств объекта, но в виде массива -->
     </div>
   </div>
