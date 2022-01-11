@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
-    <div @click="onClick(cur - 1)">-</div>
-    <div
+    <button class="page" @click="onClick(cur - 1)">-</button>
+    <button
       v-for="page in amountPages"
       :key="page"
       @click="onClick(page)"
@@ -9,8 +9,8 @@
       :class="{ active: page === cur }"
     >
       {{ page }}
-    </div>
-    <div @click="onClick(cur + 1)">+</div>
+    </button>
+    <button class="page" @click="onClick(cur + 1)">+</button>
   </div>
 </template>
 
@@ -28,11 +28,12 @@ export default {
     },
   },
   methods: {
-    onClick(page) {
-      if (page < 1 || page > this.amountPages) {
+    onClick(p) {
+      if (p < 1 || p > this.amountPages) {
         return;
       }
-      this.$emit(page);
+      //   регистрируем собственное событие, даем ему название
+      this.$emit("paginate", p);
     },
   },
 };
@@ -41,6 +42,7 @@ export default {
 <style scoped >
 .wrapper {
   display: flex;
+  align-items: center;
   /* & > div {
     padding: 10px;
     &.active {
@@ -50,8 +52,13 @@ export default {
 }
 .page {
   padding: 10px;
+  border: none;
 }
 .page.active {
-  background: #ccc;
+  background: rgb(158, 158, 158);
+}
+
+.page:hover {
+  background: rgb(221, 221, 221);
 }
 </style>

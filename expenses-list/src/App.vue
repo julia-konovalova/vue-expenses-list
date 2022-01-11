@@ -14,7 +14,7 @@
           v-show="formIsShow"
           @addNewPayment="onDataPaymentAdd"
         />
-        <payments-display :items="paymentsList" />
+        <payments-display :items="currentElements" />
         <p>Сумма всех расходов:{{ getSumValue }}</p>
         <pagination
           :cur="page"
@@ -31,7 +31,7 @@
 import AddPaymentForm from "./components/AddPaymentForm.vue";
 import PaymentsDisplay from "./components/PaymentsDisplay.vue";
 // mapMutations это встроенный функционал Vuex, чтобы вызывать методы мутации по их имени
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import Pagination from "./components/Pagination.vue";
 export default {
   name: "App",
@@ -51,12 +51,20 @@ export default {
   },
   computed: {
     // по аналогии с mapMutations. можно вызывать геттеры через сокращенную запись ...mapGetters
-    getSumValue() {
-      return this.$store.getters.getFullPaymentValue;
+    ...mapGetters({
+      getSumValue: "getFullPaymentValue",
+      paymentsList: "getPaymentsList",
+    }),
+    currentElements() {
+      const { n, page } = this;
+      return this.paymentsList.slice(n * (page - 1), n * page);
     },
-    paymentsList() {
-      return this.$store.getters.getPaymentsList;
-    },
+    // getSumValue() {
+    //     return this.$store.getters.getFullPaymentValue;
+    //   },
+    //   paymentsList() {
+    //     return this.$store.getters.getPaymentsList;
+    //   },
   },
   methods: {
     // Т.к. mapMutations функция, то  пишем ее в методах,
@@ -115,8 +123,8 @@ export default {
     onDataPaymentAdd(data) {
       this.addData(data);
     },
-    onChangePage(page) {
-      this.page = page;
+    onChangePage(p) {
+      this.page = p;
     },
   },
   created() {
