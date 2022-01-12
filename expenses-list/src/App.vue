@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <header>
-      <a href="#dashboard">Dashboard</a> / <a href="#about">About</a> /
-      <a href="#notfound">NotFound</a>
+      <a href="dashboard">Dashboard</a> / <a href="about">About</a> /
+      <a href="notfound">NotFound</a>
     </header>
     <div class="content">
       <Dashboard v-if="page === 'dashboard'" />
@@ -43,13 +43,22 @@ export default {
   methods: {
     setPage() {
       // location это свойство глобального объекта window - адресная строка
-      this.page = location.hash.slice(1);
+      this.page = location.pathname.slice(1);
     },
   },
   mounted() {
-    this.setPage();
-    // При переходе между вкладками, мы будем ослеживать событие изменения хэша с помощью встроенного события hashchange в адресной строке браузера(window)
-    window.addEventListener("hashchange", () => this.setPage());
+    const links = document.querySelectorAll("a");
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        // History API - работа с историей переходов в браузере
+        history.pushState({}, "", link.href);
+        this.setPage();
+      });
+    });
+    // this.setPage();
+    // При переходе между вкладками, мы будем ослеживать изменение в истории браузера, работают переходы вперед/назад
+    window.addEventListener("popstate", () => this.setPage());
   },
 };
 </script>
